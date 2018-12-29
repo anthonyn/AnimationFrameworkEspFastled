@@ -6,27 +6,26 @@
 
 */
 
+#include "Animation.cpp"
+
 #include "FastLED.h"
 
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include "Secrets.h"
+#include "config.h"
 
 //FastLED
 FASTLED_USING_NAMESPACE
-
-#define DATA_PIN    0
-#define LED_TYPE    WS2811
-#define COLOR_ORDER RGB
-#define NUM_LEDS    15
 CRGB leds[NUM_LEDS];
+
 
 int brightness = 255;
 int framesPerSecond = 10;
 long programCounter;
 
-
 ESP8266WebServer server(80);
+
 
 void setup() {
   delay(1000);
@@ -52,14 +51,29 @@ void setup() {
 
   //Framwwork Setup
   programCounter = 0;
+
+
 }
+
+TestAnimation ta(leds);
+
+Animation *a = &ta;
 
 void loop() {
 
-  testAnimation();
+  //  testAnimation();
+
+
+  //ta.doDraw();
+
+  a->doDraw();
+//  a->test();
+
+
   doAnimation();
   doWebserver();
 
+  programCounter++;
 }
 
 void doWebserver() {
@@ -69,7 +83,6 @@ void doWebserver() {
 void doAnimation() {
   FastLED.show();
   FastLED.delay(1000 / framesPerSecond);
-  programCounter++;
 }
 
 void testAnimation() {
@@ -78,5 +91,4 @@ void testAnimation() {
   leds[pos] = CRGB::Red;
 
 }
-
 
